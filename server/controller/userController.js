@@ -1,12 +1,14 @@
 import User from "../models/userModels.js";
 import bcrypt from 'bcryptjs'
+import generateToken from "../utils/generateToken.js";
+import asyncHandler from "../middleware/asyncHandler.js";
 
-const createUser = async (req, res) => {
+const createUser = asyncHandler(async (req, res) => {
 
     const { username, email, password } = req.body;
 
     if (!username || !email || !password) {
-        return res.status(400).json({ message: "All Fields are required" });
+        throw new Error("All fields are required.")
     }
 
     const userExists = await User.findOne({ email });
@@ -21,15 +23,15 @@ const createUser = async (req, res) => {
 
     try {
         await newUser.save();
-        res.status(200).json(newUser)
+        res.status(201).json(newUser)
 
     } catch (error) {
         res.status(400);
-        throw new Error(error.message);
+        throw new Error("Invalid User Data");
     }
-}
+})
 
-const userLogin = async (req, res) => {
+const userLogin = asyncHandler(async (req, res) => {
 
     const { email, password } = req.body;
 
@@ -50,7 +52,9 @@ const userLogin = async (req, res) => {
     }
 
 
-}
+    generateToken(res, userExists._id)
+
+})
 
 const userLogout = async (req, res) => {
     console.log("User Logged Out")
