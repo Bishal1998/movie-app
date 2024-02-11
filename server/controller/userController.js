@@ -69,20 +69,21 @@ const userLogout = asyncHandler(async (req, res) => {
 })
 
 const getCurrentUser = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id)
 
-    try {
+    if (!user) {
+        res.status(404);
+        throw new Error("User not found")
+    } else {
+        try {
+            const { password, ...data } = user._doc
+            res.status(200).json(data)
 
-        const user = await User.findById(req.params.id)
-
-        const { password, ...data } = user._doc
-
-        res.status(200).json(data)
-
-    } catch (error) {
-        res.status(400);
-        throw new Error("Couldn't get current user", error.message)
+        } catch (error) {
+            res.status(400);
+            throw new Error("Couldn't get current user", error.message)
+        }
     }
-
 })
 
 const updateCurrentUser = async (req, res) => {
