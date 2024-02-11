@@ -75,13 +75,12 @@ const getCurrentUser = asyncHandler(async (req, res) => {
         res.status(404);
         throw new Error("User not found")
     } else {
-        try {
+        if (req.user.id === req.params.id || req.user.isAdmin) {
             const { password, ...data } = user._doc
             res.status(200).json(data)
-
-        } catch (error) {
-            res.status(400);
-            throw new Error("Couldn't get current user", error.message)
+        } else {
+            res.status(404)
+            throw new Error("You are not allowed to get this user")
         }
     }
 })
@@ -90,24 +89,25 @@ const updateCurrentUser = asyncHandler(async (req, res) => {
 
     const user = await User.findById(req.params.id);
     if (user) {
+        if (req.user.id === req.params.id || req.user.isAdmin) {
+            user.username = req.body.username || user.username
+            user.email = req.body.email || user.email
 
-        user.username = req.body.username || user.username
-        user.email = req.body.email || user.email
+            if (req.body.password) {
+                const hashedPassword = await bcrypt.hash(req.body.password, 10);
+                user.password = hashedPassword;
+            }
 
-        if (req.body.password) {
+            const updatedUser = await user.save();
+            const { password, ...data } = updatedUser._doc
+            res.status(200).json(data)
 
-            const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-            user.password = hashedPassword;
+        } else {
+            res.status(404)
+            throw new Error("You are not allowed to get this user")
         }
-
-        const updatedUser = await user.save();
-
-        const { password, ...data } = updatedUser._doc
-
-        res.status(200).json(data)
-
     } else {
+        res.status(404);
         throw new Error("User not found")
     }
 })
@@ -115,18 +115,20 @@ const updateCurrentUser = asyncHandler(async (req, res) => {
 
 const deleteCurrentUser = asyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id);
-    if (!user) {
-        throw new Error("User not found")
-    } else {
-        try {
+    if (user) {
+        if (req.user.id === req.params.id || req.user.isAdmin) {
             await User.findByIdAndDelete(req.params.id);
             res.status(200).json({ message: "User Deleted successfully" })
-        } catch (error) {
-            res.status(400)
-            throw new Error("Couldn't delete the user", error.message)
+        } else {
+            res.status(404)
+            throw new Error("You are not allowed to get this user")
         }
+    } else {
+        res.status(400);
+        throw new Error("User not found")
     }
-})
+}
+)
 
 
 const getAllUsers = asyncHandler(async (req, res) => {
