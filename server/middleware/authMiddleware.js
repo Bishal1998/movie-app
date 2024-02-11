@@ -24,12 +24,13 @@ const authenticate = asyncHandler(async (req, res, next) => {
 });
 
 // Check if the user is admin or not
-const authorizeAdmin = (req, res, next) => {
+const authorizeAdmin = asyncHandler(async (req, res, next) => {
     if (req.user && req.user.isAdmin) {
         next();
     } else {
-        res.status(401).send("Not authorized as an admin");
+        res.status(401)
+        throw new Error("You are not authorized as an admin.")
     }
-};
+});
 
 export { authenticate, authorizeAdmin };
