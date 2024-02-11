@@ -54,6 +54,10 @@ const userLogin = asyncHandler(async (req, res) => {
 
     generateToken(res, userExists._id)
 
+    const { password: pass, ...data } = userExists._doc;
+
+    res.status(201).json(data)
+
 })
 
 const userLogout = async (req, res) => {
