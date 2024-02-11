@@ -88,9 +88,20 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 const updateCurrentUser = async (req, res) => {
     console.log("Current User Updated")
 }
-const deleteCurrentUser = async (req, res) => {
-    console.log("User Deleted")
-}
+const deleteCurrentUser = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+        throw new Error("User not found")
+    } else {
+        try {
+            await User.findByIdAndDelete(req.params.id);
+            res.status(200).json({ message: "User Deleted successfully" })
+        } catch (error) {
+            res.status(400)
+            throw new Error("Couldn't delete the user", error.message)
+        }
+    }
+})
 
 
 const getAllUsers = asyncHandler(async (req, res) => {
