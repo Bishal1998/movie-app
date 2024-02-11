@@ -10,7 +10,7 @@ connectToDB();
 const app = express();
 const PORT = process.env.PORT;
 
-
+app.use(express.json());
 app.use("/api/v1/users", userRoutes);
 
 app.get("/", (req, res) => {
