@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Button, Input } from "../components";
 import { Link } from "react-router-dom";
+import { useRegisterMutation } from "../redux/api/user";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -10,18 +13,40 @@ const Register = () => {
     cpassword: "",
   });
 
+  const [register, { isLoading }] = useRegisterMutation();
+  const navigate = useNavigate();
+
   const handleFormData = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (
+      !formData.username ||
+      !formData.password ||
+      !formData.email ||
+      !formData.cpassword
+    ) {
+      return toast.error("All Fields are required");
+    }
     if (formData.cpassword !== formData.password) {
-      return console.log("Password didnot match");
+      return toast.error("Password didnot match");
     }
 
-    console.log(formData);
+    try {
+      await register({
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+      }).unwrap();
+
+      toast.success("User registered successfully!!");
+      navigate("/");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -61,7 +86,7 @@ const Register = () => {
           value={formData.cpassword}
           onChange={handleFormData}
         />
-        <Button />
+        <Button text="Register" isLoading={isLoading} />
       </form>
       <p className="text-base text-[#6D6D6D]">
         Already have an account?{" "}
