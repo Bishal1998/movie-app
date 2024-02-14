@@ -37,10 +37,10 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => (
-  <>
+  <div className="px-4">
     <ToastContainer />
     <RouterProvider router={router} />
-  </>
+  </div>
 );
 
 export default App;
