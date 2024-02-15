@@ -39,11 +39,11 @@ const Header = () => {
 
   return (
     <header className="w-full max-w-[1500px] mx-auto py-4 flex justify-between items-center gap-4">
-      <div className="flex flex-col text-2xl font-bold">
+      <Link to={"/"} className="flex flex-col text-2xl font-bold">
         <p>The</p>
         <p>Movie</p>
         <p>Tracker</p>
-      </div>
+      </Link>
       <div>
         <input
           type="text"

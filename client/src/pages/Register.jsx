@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Button, Input } from "../components";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "../redux/api/user";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -15,6 +15,7 @@ const Register = () => {
 
   const [register, { isLoading }] = useRegisterMutation();
   const navigate = useNavigate();
+  const { userData } = useSelector((state) => state.auth);
 
   const handleFormData = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -48,6 +49,8 @@ const Register = () => {
       toast.error(error.data.message);
     }
   };
+
+  if (userData) return <Navigate to={"/profile"} />;
 
   return (
     <section className="w-full max-w-7xl h-screen mx-auto flex flex-col items-center justify-center gap-8 px-8">

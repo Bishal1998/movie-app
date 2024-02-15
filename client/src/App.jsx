@@ -3,6 +3,7 @@ import { Footer, Header } from "./components";
 import { Home, Login, Profile, Register } from "./pages";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { PrivateRoute } from "./components";
 
 const Layout = () => {
   return (
@@ -25,7 +26,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/profile",
-        element: <Profile />,
+        element: <PrivateRoute element={<Profile />} />,
       },
     ],
   },

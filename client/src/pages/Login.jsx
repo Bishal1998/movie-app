@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Button, Input } from "../components";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useLoginApiMutation } from "../redux/api/user";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/features/auth/authSlice";
 
 const Login = () => {
@@ -16,6 +16,7 @@ const Login = () => {
   const [loginApi, { isLoading, isError }] = useLoginApiMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { userData } = useSelector((state) => state.auth);
 
   const handleFormData = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -40,6 +41,8 @@ const Login = () => {
       toast.error(error.data.message);
     }
   };
+
+  if (userData) return <Navigate to={"/profile"} />;
 
   return (
     <section className="w-full max-w-7xl h-screen mx-auto flex flex-col items-center justify-center gap-8 px-8">
