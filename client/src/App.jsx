@@ -1,6 +1,6 @@
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Footer, Header } from "./components";
-import { Home, Login, Register } from "./pages";
+import { Home, Login, Profile, Register } from "./pages";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -23,7 +23,10 @@ const router = createBrowserRouter([
         index: true,
         element: <Home />,
       },
-      {},
+      {
+        path: "/profile",
+        element: <Profile />,
+      },
     ],
   },
   {

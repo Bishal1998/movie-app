@@ -15,7 +15,11 @@ const PORT = process.env.PORT;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+}));
+app.set('trust proxy', 1);
 app.use("/api/v1/users", userRoutes);
 
 app.get("/", (req, res) => {
