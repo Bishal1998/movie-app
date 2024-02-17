@@ -22,7 +22,9 @@ const createMovie = asyncHandler(async (req, res) => {
 })
 
 const getAllMovie = asyncHandler(async (req, res) => {
-    console.log("Get All Movies")
+
+    const movies = await Movie.find({});
+    res.status(200).json(movies)
 })
 
 const updateMovie = asyncHandler(async (req, res) => {
