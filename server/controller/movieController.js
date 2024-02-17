@@ -36,7 +36,17 @@ const deleteMovie = asyncHandler(async (req, res) => {
 })
 
 const getSingleMovie = asyncHandler(async (req, res) => {
-    console.log("Get Single Movie")
+
+    const { id } = req.params;
+
+    const movieExists = await Movie.findById(id);
+
+    if (!movieExists) {
+        return res.status(400).json({ message: "Movie does not exist" });
+    }
+
+    res.status(200).json(movieExists)
+
 })
 
 export { createMovie, getAllMovie, updateMovie, deleteMovie, getSingleMovie }
