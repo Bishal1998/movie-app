@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import connectToDB from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
+import movieRoutes from './routes/movieRoutes.js';
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use(cors({
 }));
 app.set('trust proxy', 1);
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/movies", movieRoutes);
 
 app.get("/", (req, res) => {
     res.json({ message: "Server is working" })
