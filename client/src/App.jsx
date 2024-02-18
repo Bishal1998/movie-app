@@ -1,6 +1,6 @@
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Footer, Header } from "./components";
-import { Home, Login, Movies, Profile, Register } from "./pages";
+import { CreateMovie, Home, Login, Movies, Profile, Register } from "./pages";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { PrivateRoute } from "./components";
@@ -27,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <PrivateRoute element={<Profile />} />,
+      },
+      {
+        path: "/create-movie",
+        element: <PrivateRoute element={<CreateMovie />} />,
       },
       {
         path: "/movies/:slug",

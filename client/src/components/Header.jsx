@@ -66,8 +66,9 @@ const Header = () => {
       )}
 
       {isActive && (
-        <div className="w-28 h-16 border border-[#D9D9D9] absolute top-20 right-20 flex flex-col items-center justify-center text-base">
+        <div className="w-40 h-20 border border-[#D9D9D9] absolute top-20 right-20 flex flex-col items-center justify-center text-base">
           <Link to={"/profile"}>Profile</Link>
+          {userData.isAdmin && <Link to={"/create-movie"}>Create a movie</Link>}
           {userData ? (
             <p onClick={handleLogout} className="cursor-pointer">
               Logout
