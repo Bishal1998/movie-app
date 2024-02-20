@@ -11,6 +11,7 @@ import { Movie } from "../components";
 
 const Movies = () => {
   const { slug } = useParams();
+
   const navigate = useNavigate();
   const { userData } = useSelector((state) => state.auth);
 
@@ -24,16 +25,19 @@ const Movies = () => {
   const [deleteMovie, { isLoading: deleteLoading }] = useDeleteMovieMutation();
 
   useEffect(() => {
-    const singleMovie = data?.find((movie) => movie.slug === slug);
-
-    setMovie(singleMovie);
-  }, [slug]);
+    if (!isLoading && data) {
+      const singleMovie = data?.find((movie) => movie.slug === slug);
+      setMovie(singleMovie);
+    }
+  }, [data, slug]);
 
   useEffect(() => {
-    const similarMovie = data?.filter((movie) => movie.slug !== slug);
+    if (!isLoading && data) {
+      const similarMovie = data?.filter((movie) => movie.slug !== slug);
 
-    setSimilarMovie(similarMovie);
-  }, [data]);
+      setSimilarMovie(similarMovie);
+    }
+  }, [data, slug]);
 
   const handlePlay = () => {
     setIsPlaying(true);
