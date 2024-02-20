@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   useGetAllMoviesQuery,
   useDeleteMovieMutation,
@@ -60,9 +60,12 @@ const Movies = () => {
         </h2>
         {userData?.isAdmin && (
           <div className="flex items-center justify-between gap-4 flex-wrap">
-            <p className="text-green-500 text-xl font-medium cursor-pointer">
+            <Link
+              to={`/update/${movie?._id}`}
+              className="text-green-500 text-xl font-medium cursor-pointer"
+            >
               Edit
-            </p>
+            </Link>
             <p
               className="text-red-600 text-xl font-medium cursor-pointer"
               onClick={() => setDeleteActive(true)}
