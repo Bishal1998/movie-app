@@ -1,14 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useGetAllMoviesQuery } from "../redux/api/movie";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  useGetAllMoviesQuery,
+  useDeleteMovieMutation,
+} from "../redux/api/movie";
 import { FaPlay } from "react-icons/fa";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const Movies = () => {
   const { slug } = useParams();
+  const navigate = useNavigate();
+  const { userData } = useSelector((state) => state.auth);
 
   const { data, isLoading } = useGetAllMoviesQuery();
   const [movie, setMovie] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [deleteActive, setDeleteActive] = useState(false);
+
+  const [deleteMovie, { isLoading: deleteLoading }] = useDeleteMovieMutation();
 
   useEffect(() => {
     const singleMovie = data?.find((movie) => movie.slug === slug);
@@ -18,6 +28,16 @@ const Movies = () => {
 
   const handlePlay = () => {
     setIsPlaying(true);
+  };
+
+  const handleMovieDelete = async () => {
+    try {
+      await deleteMovie(movie?._id).unwrap();
+      toast.success("Movie deleted successfully");
+      navigate("/");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   if (isLoading)
@@ -34,7 +54,24 @@ const Movies = () => {
 
   return (
     <section className="w-full max-w-[1500px] mx-auto py-4">
-      <h2 className="font-bold text-[40px] py-4 capitalize">{movie?.title}</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="font-bold text-[40px] py-4 capitalize">
+          {movie?.title}
+        </h2>
+        {userData?.isAdmin && (
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <p className="text-green-500 text-xl font-medium cursor-pointer">
+              Edit
+            </p>
+            <p
+              className="text-red-600 text-xl font-medium cursor-pointer"
+              onClick={() => setDeleteActive(true)}
+            >
+              Delete
+            </p>
+          </div>
+        )}
+      </div>
       <div className="flex flex-col lg:flex-row justify-between items-center gap-16">
         <div className="w-full  lg:w-1/2">
           <div className="flex flex-col lg:flex-row items-center gap-4">
@@ -76,6 +113,30 @@ const Movies = () => {
           </div>
         )}
       </div>
+
+      {deleteActive && (
+        <div>
+          <div className="absolute top-0 left-0 bg-[#37C6F3] opacity-70 h-screen w-full"></div>
+
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center">
+            <div className="rounded-xl px-6 md:px-16 py-4 md:py-8 bg-white">
+              <p className="text-base md:text-2xl font-semibold">
+                Are you sure you want to delete?
+              </p>
+              <div className="flex items-center justify-between pt-6">
+                <button onClick={() => setDeleteActive(false)}>Cancel</button>
+                <button
+                  className="bg-red-600 rounded-lg py-2 px-4 md:py-4 md:px-8  text-white text-lg"
+                  onClick={handleMovieDelete}
+                  disabled={deleteLoading}
+                >
+                  {deleteLoading ? "Deleting..." : "Yes"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
