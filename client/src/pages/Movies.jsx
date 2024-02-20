@@ -27,7 +27,7 @@ const Movies = () => {
     const singleMovie = data?.find((movie) => movie.slug === slug);
 
     setMovie(singleMovie);
-  }, [data]);
+  }, [slug]);
 
   useEffect(() => {
     const similarMovie = data?.filter((movie) => movie.slug !== slug);
