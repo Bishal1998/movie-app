@@ -7,6 +7,7 @@ import {
 import { FaPlay } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import { Movie } from "../components";
 
 const Movies = () => {
   const { slug } = useParams();
@@ -18,12 +19,20 @@ const Movies = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [deleteActive, setDeleteActive] = useState(false);
 
+  const [similarMovie, setSimilarMovie] = useState(null);
+
   const [deleteMovie, { isLoading: deleteLoading }] = useDeleteMovieMutation();
 
   useEffect(() => {
     const singleMovie = data?.find((movie) => movie.slug === slug);
 
     setMovie(singleMovie);
+  }, [data]);
+
+  useEffect(() => {
+    const similarMovie = data?.filter((movie) => movie.slug !== slug);
+
+    setSimilarMovie(similarMovie);
   }, [data]);
 
   const handlePlay = () => {
@@ -140,6 +149,15 @@ const Movies = () => {
           </div>
         </div>
       )}
+
+      <div>
+        <h2 className="text-xl font-bold pt-8 pb-4">Similar Movie</h2>
+        <div className="flex flex-wrap gap-10">
+          {similarMovie?.map((movie) => {
+            return <Movie key={movie._id} {...movie} />;
+          })}
+        </div>
+      </div>
     </section>
   );
 };
