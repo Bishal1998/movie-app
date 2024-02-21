@@ -8,12 +8,13 @@ const Home = () => {
 
   const { searchTerm } = useSelector((state) => state.search);
 
-  if (!data && !searchTerm)
-    return <p className="text-lg font-bold">No Movies Found</p>;
-
   useEffect(() => {
     refetch();
-  }, []);
+  }, [refetch]);
+
+  if (!data && !searchTerm) {
+    return <p className="text-lg font-bold">No Movies Found</p>;
+  }
 
   return (
     <section className="w-full max-w-[1500px] mx-auto py-8 flex">
