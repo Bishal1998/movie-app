@@ -15,7 +15,7 @@ const Movies = () => {
   const navigate = useNavigate();
   const { userData } = useSelector((state) => state.auth);
 
-  const { data, isLoading } = useGetAllMoviesQuery();
+  const { data, isLoading, refetch } = useGetAllMoviesQuery();
   const [movie, setMovie] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [deleteActive, setDeleteActive] = useState(false);
@@ -29,6 +29,7 @@ const Movies = () => {
       const singleMovie = data?.find((movie) => movie.slug === slug);
       setMovie(singleMovie);
     }
+    refetch();
   }, [data, slug]);
 
   useEffect(() => {

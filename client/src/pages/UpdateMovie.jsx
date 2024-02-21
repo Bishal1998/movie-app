@@ -9,7 +9,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const UpdateMovie = () => {
   const { id } = useParams();
-  const { data, isLoading } = useGetSingleMovieQuery(id);
+  const { data, isLoading, refetch } = useGetSingleMovieQuery(id);
   const [updateMovie, { isLoading: updateLoading }] = useUpdateMovieMutation();
 
   const [movieData, setMovieData] = useState({
@@ -32,6 +32,7 @@ const UpdateMovie = () => {
         duration: data.duration,
       });
     }
+    refetch();
   }, [data, isLoading]);
 
   const navigate = useNavigate();
