@@ -6,13 +6,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { logOut } from "../redux/features/auth/authSlice";
+import { useGetAllMoviesQuery } from "../redux/api/movie";
+import { search } from "../redux/features/search/searchSlice";
 
 const Header = () => {
   const [isActive, setIsActive] = useState(false);
   const { userData } = useSelector((state) => state.auth);
-  const [logoutApi, { isLoading }] = useLogoutApiMutation();
+  const [logoutApi, { isLoading: logOutLoading }] = useLogoutApiMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const { data, isLoading: searchLoading, refetch } = useGetAllMoviesQuery();
+  const [searchTerm, setSearchTerm] = useState("");
 
   const clickRef = useRef(null);
 
@@ -37,6 +42,22 @@ const Header = () => {
     }
   };
 
+  const handleSearchTerm = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  useEffect(() => {
+    const searchedMovie = data?.filter(
+      (movie) =>
+        movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        movie.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        movie.slug.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        movie.genre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        movie.duration.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    dispatch(search(searchedMovie));
+  }, [searchTerm]);
+
   return (
     <header className="w-full max-w-[1500px] mx-auto py-4 flex justify-between items-center gap-4">
       <Link to={"/"} className="flex flex-col text-2xl font-bold">
@@ -49,6 +70,8 @@ const Header = () => {
           type="text"
           placeholder="🔍 Search a movie or a series"
           className="bg-[#D9D9D9] outline-none rounded-3xl px-8 w-full md:w-[630px] py-4"
+          value={searchTerm}
+          onChange={(e) => handleSearchTerm(e)}
         />
       </div>
       {userData ? (
