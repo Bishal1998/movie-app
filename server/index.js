@@ -5,6 +5,7 @@ import cors from 'cors';
 import connectToDB from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
 import movieRoutes from './routes/movieRoutes.js';
+import favRoutes from './routes/favRoutes.js';
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use(cors({
 app.set('trust proxy', 1);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/movies", movieRoutes);
+app.use("/api/v1/fav", favRoutes);
 
 app.get("/", (req, res) => {
     res.json({ message: "Server is working" })
