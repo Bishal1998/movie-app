@@ -26,7 +26,8 @@ const MyFav = () => {
 
   return (
     favMovies?.length > 0 &&
-    userData && (
+    userData &&
+    !userData?.isAdmin && (
       <section className="w-full max-w-[1500px] mx-auto py-8">
         <h2 className="text-xl font-bold">My Favorite Movie</h2>
         <div className="flex flex-col md:flex-row gap-12 justify-center md:justify-start py-4">
