@@ -9,6 +9,11 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { Movie } from "../components";
 
+import {
+  useToggleFavMutation,
+  useGetFavListQuery,
+} from "../redux/api/favMovies";
+
 const Movies = () => {
   const { slug } = useParams();
 
@@ -19,6 +24,13 @@ const Movies = () => {
   const [movie, setMovie] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [deleteActive, setDeleteActive] = useState(false);
+
+  const [toggleFav, { isLoading: favLoading }] = useToggleFavMutation();
+  const {
+    data: favData,
+    isLoading: favListLoading,
+    refetch: favRefetch,
+  } = useGetFavListQuery(userData?._id);
 
   const [similarMovie, setSimilarMovie] = useState(null);
 
@@ -54,6 +66,28 @@ const Movies = () => {
     }
   };
 
+  const handleAddFav = async () => {
+    try {
+      await toggleFav(movie?._id).unwrap();
+      toast.success("Movie added to favorite");
+      favRefetch();
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleRemoveFav = async () => {
+    try {
+      await toggleFav(movie?._id).unwrap();
+      toast.success("Movie Removed from favorite");
+      favRefetch();
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const isFavorite = favData?.favMovie?.includes(movie?._id);
+
   if (isLoading)
     return (
       <p className="w-full max-w-7xl mx-auto text-xl font-bold">Loading....</p>
@@ -87,6 +121,26 @@ const Movies = () => {
               Delete
             </p>
           </div>
+        )}
+        {userData && !userData?.isAdmin && (
+          <>
+            {!isFavorite && !favLoading && (
+              <div
+                className="bg-[#37C6F3] hover:bg-[#3aa2c2] text-white py-4 px-6 rounded-xl cursor-pointer whitespace-nowrap"
+                onClick={handleAddFav}
+              >
+                Add to Favorite
+              </div>
+            )}
+            {isFavorite && !favLoading && (
+              <div
+                className="bg-red-600 hover:bg-red-500 text-white py-4 px-6 rounded-xl cursor-pointer whitespace-nowrap"
+                onClick={handleRemoveFav}
+              >
+                Remove Favorite
+              </div>
+            )}
+          </>
         )}
       </div>
       <div className="flex flex-col lg:flex-row justify-between items-center gap-16">
