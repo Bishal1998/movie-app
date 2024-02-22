@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useGetAllMoviesQuery } from "../redux/api/movie";
-import { Movie } from "../components";
+import { Movie, MyFav } from "../components";
 import { useSelector } from "react-redux";
 
 const Home = () => {
@@ -13,12 +13,16 @@ const Home = () => {
   }, [refetch]);
 
   if (!data && !searchTerm) {
-    return <p className="text-lg font-bold">No Movies Found</p>;
+    return (
+      <p className="text-lg font-bold w-full max-w-[1500px] mx-auto">
+        No Movies Found
+      </p>
+    );
   }
 
   return (
-    <section className="w-full max-w-[1500px] mx-auto py-8 flex">
-      <div className="flex flex-col md:flex-row gap-12 justify-center md:justify-between">
+    <section className="w-full max-w-[1500px] mx-auto py-8">
+      <div className="flex flex-col md:flex-row gap-12 justify-center  md:justify-start">
         {searchTerm && searchTerm.length > 0
           ? searchTerm.map((movie) => {
               return <Movie key={movie._id} {...movie} />;
@@ -27,6 +31,7 @@ const Home = () => {
               return <Movie key={movie._id} {...movie} />;
             })}
       </div>
+      <MyFav />
     </section>
   );
 };
