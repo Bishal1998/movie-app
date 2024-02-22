@@ -21,7 +21,7 @@ const Home = () => {
   }
 
   return (
-    <section className="w-full max-w-[1500px] mx-auto py-8">
+    <section className="w-full max-w-[1500px] mx-auto py-8 min-h-screen">
       <div className="flex flex-col md:flex-row gap-12 justify-center  md:justify-start">
         {searchTerm && searchTerm.length > 0
           ? searchTerm.map((movie) => {
