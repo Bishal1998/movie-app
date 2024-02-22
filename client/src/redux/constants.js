@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000"
+const BASE_URL = "https://movie-server-two-blond.vercel.app"
 const USER_API_URL = "/api/v1/users";
 const MOVIE_API_URL = "/api/v1/movies";
 const FAV_API_URL = "/api/v1/fav";
